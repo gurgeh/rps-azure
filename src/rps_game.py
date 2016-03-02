@@ -15,14 +15,17 @@ def good(prob, m):
 
 class RPSGame:
     def __init__(self):
-        self.computer_history = ''
-        self.player_history = ''
+        self.set_history()
 
         self.computer_wins = 0
         self.player_wins = 0
         self.draws = 0
 
-        self.next_move = random.choice(range(3))
+    def set_history(self, player_history='', computer_history=''):
+        self.player_history = player_history
+        self.computer_history = computer_history
+
+        return self.get_next_move()
 
     def move(self, m):
         m = m.upper()
@@ -53,6 +56,10 @@ class RPSGame:
         return history + '\n' + result
 
     def get_next_move(self):
+        if not self.player_history:
+            self.next_move = random.choice(range(3))
+            return self.next_move
+
         headers = {'Content-Type': 'application/json',
                    'Authorization': ('Bearer ' + API_KEY)}
         data = self.make_history()
@@ -62,6 +69,8 @@ class RPSGame:
                     0][-4:-1]]
         goodness = [(good(prob, i), i) for i in range(3)]
         self.next_move = sorted(goodness)[-1][1]
+
+        return self.next_move
 
     def make_history(self):
         history = [''] * 10
