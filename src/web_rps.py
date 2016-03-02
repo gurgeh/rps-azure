@@ -7,4 +7,4 @@ app = Flask(__name__)
 @app.route("/move/<player>/<computer>")
 def get_move(player, computer):
     rg = rps_game()
-    return jsonify(rg.set_history(player, computer))
+    return jsonify(move=rg.set_history(player, computer))
