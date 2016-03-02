@@ -30,7 +30,7 @@ class RPSGame:
 
     def move(self, m):
         m = m.upper()
-        if not m in MOVES:
+        if m not in MOVES:
             raise KeyError
 
         self.update_score(MOVES.index(m))

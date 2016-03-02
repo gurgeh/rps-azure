@@ -1,0 +1,12 @@
+<html>
+  <head>
+    <script src="/static/js/rps.js"></script>
+  </head>
+  <body>
+    <div id="message">Click a move below to start!</div>
+    <div><img id="human_sign" width="30%"><img id="computer_sign" width="30%" style="transform:scaleX(-1);filter:flipH"></div>
+    <div><span id="pickmove0" onclick="pick_move(0)">Rock</span> <span id="pickmove1" onclick="pick_move(1)">Paper</span> <span id="pickmove2" onclick="pick_move(2)">Scissors</span></div>
+    <div>You/Draws/Computer: <span id="human_wins">0</span> / <span id="draws">0</span> / <span id="computer_wins">0</span></div>
+    <div id="counter"></div>
+  </body>
+</html>
