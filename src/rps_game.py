@@ -4,7 +4,8 @@ import random
 from prepare_history import HISTORY_NAMES
 
 URL = 'https://ussouthcentral.services.azureml.net/workspaces/84e2890f7c1a4656bbcac6268054e1b8/services/86ffab0c5e2944b5876080d2300b2528/execute?api-version=2.0'
-API_KEY = "glBLx+WMjKXrgri66eK6IRVfuvvhdQNpK4NE0AYRKy2D/v2Z4bjZ6E0yMBjj63xEZs0HMXQu6cNhThdt7GenVA=="
+
+AZ_KEY = "glBLx+WMjKXrgri66eK6IRVfuvvhdQNpK4NE0AYRKy2D/v2Z4bjZ6E0yMBjj63xEZs0HMXQu6cNhThdt7GenVA=="
 
 MOVES = 'RPS'
 
@@ -22,8 +23,8 @@ class RPSGame:
         self.draws = 0
 
     def set_history(self, player_history='', computer_history=''):
-        self.player_history = player_history
-        self.computer_history = computer_history
+        self.player_history = player_history.upper()
+        self.computer_history = computer_history.upper()
 
         return self.get_next_move()
 
@@ -61,14 +62,16 @@ class RPSGame:
             return self.next_move
 
         headers = {'Content-Type': 'application/json',
-                   'Authorization': ('Bearer ' + API_KEY)}
+                   'Authorization': ('Bearer ' + AZ_KEY)}
         data = self.make_history()
         res = requests.post(URL, json=data, headers=headers)
         prob = [float(x)
                 for x in res.json()['Results']['output1']['value']['Values'][
                     0][-4:-1]]
         goodness = [(good(prob, i), i) for i in range(3)]
-        self.next_move = sorted(goodness)[-1][1]
+        goodness.sort()
+
+        self.next_move = goodness[-1][1]
 
         return self.next_move
 
