@@ -3,10 +3,8 @@
     <script src="/static/js/rps.js"></script>
   </head>
   <body>
-    <div id="message">Click a move below to start!</div>
-    <div><img id="human_sign" width="30%"><img id="computer_sign" width="30%" style="transform:scaleX(-1);filter:flipH"></div>
-    <div><span id="pickmove0" onclick="pick_move(0)">Rock</span> <span id="pickmove1" onclick="pick_move(1)">Paper</span> <span id="pickmove2" onclick="pick_move(2)">Scissors</span></div>
-    <div>You/Draws/Computer: <span id="human_wins">0</span> / <span id="draws">0</span> / <span id="computer_wins">0</span></div>
-    <div id="counter"></div>
+    <div id="message" style="font-size:250%;font-family:Courier">Click a move below to start!</div>
+    <div style="position:relative"><img id="human_sign" width="30%"><div id="counter" style="position:absolute;top: 50px;left: 25%;font-size:2500%;color:green;z-index:10;font-family:Arial;opacity:0.3"></div><img id="computer_sign" width="30%" style="transform:scaleX(-1);filter:flipH"></div>
+    <div><a href="#" onclick="pick_move(0)"><img id="pickmove0" alt="Rock" src="/static/images/600px-rock.png" width="9%"></a> <a href="#" onclick="pick_move(1)"><img id="pickmove1" alt="Paper" src="/static/images/600px-paper.png" width="9%"></a> <a href="#" onclick="pick_move(2)"><img id="pickmove2" alt="Scissors" src="/static/images/600px-scissors.png" width="9%"></a><span id="score" style="visibility:hidden;font-size: 1000%;font-family:Arial;color:#eae5ea">&nbsp;<span style="color:#7ddcdc;" id="human_wins">0</span> / <span id="draws" style="color:#dad5ca">0</span> / <span id="computer_wins" style="color:#fe465b">0</span></span></div>
   </body>
 </html>
