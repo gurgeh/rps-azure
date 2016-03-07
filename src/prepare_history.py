@@ -11,8 +11,7 @@ openings.txt verkar ha format (både från kod och issue)
 history:player history:computer playerplayed: R S P
 """
 
-HEADER_NAMES = [
-]  # ['gender', 'it', 'r_perc', 'p_perc', 's_perc', 'doubles', 'tripples', 'lose_stay', 'lose_copy', 'lose_beat_copy', 'win_stay', 'win_copy', 'win_beat_copy', 'draw_stay', 'draw_copy', 'draw_beat_copy']
+HEADER_NAMES = []  # ['gender', 'it', 'r_perc', 'p_perc', 's_perc', 'doubles', 'tripples', 'lose_stay', 'lose_copy', 'lose_beat_copy', 'win_stay', 'win_copy', 'win_beat_copy', 'draw_stay', 'draw_copy', 'draw_beat_copy']
 HISTORY_NAMES = ['h1', 'c1', 'h2', 'c2', 'h3', 'c3', 'h4', 'c4', 'h5', 'c5',
                  'label']
 EXTRA_HEADERS = [''] * len(HEADER_NAMES)
