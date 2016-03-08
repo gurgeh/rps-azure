@@ -75,6 +75,30 @@ MESSAGES = {'draw' :
             ]
            }
 
+function switch_count(hs){
+    step = 0.5;
+    hs = hs.toLowerCase();
+    var prev = '';
+    var pts = 1.0;
+    cnt = {};
+    truecnt = {'r':0, 'p':0, 's':0};
+    len = hs.length;
+    for(var i = 0; i < len; i++){
+        c = hs[i];
+        if(prev != ''){
+            if(!cnt.hasOwnProperty([prev, c])){
+                cnt[[prev, c]] = 0;
+            }
+            cnt[[prev, c]] += i;
+            truecnt[prev] += 1;
+        }
+        prev = hs[i];
+        pts += step;
+    }
+
+    return [cnt, truecnt];
+}
+
 function pick_random(arr){
     return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -172,44 +196,84 @@ function get_next_move(){
     xmlhttp.send();
 }
 
-function decide(){
-    if(next_move == -1) {
-        setTimeout(decide, 1000);
-    } else {
-        nrgames++;
-        hide_signs();
-        frozen_human = human_move;
-        frozen_computer = next_move;
-        if(next_move==0){
-            if(human_move==0) draw();
-            if(human_move==1) hwin();
-            if(human_move==2) hlose();
-        } else if(next_move==1){
-            if(human_move==1) draw();
-            if(human_move==2) hwin();
-            if(human_move==0) hlose();
-        } else {
-            if(human_move==2) draw();
-            if(human_move==0) hwin();
-            if(human_move==1) hlose();
-        }
-        show_score();
-        if(human_wins==20){
-            message('Du vann! Människor har bara tur.. -> Ladda om sidan för att spela igen');
-        } else if(computer_wins==20) {
-            message('Bwahaha, jag vann igen! Förutsägbara människor.. -> Ladda om sidan för att spela igen');
-        } else {
-            if(nrgames < 10) {
-                message('Först till 20 vinner! Det tar en stund att förstå din stil..');
-            } else {
-                message(pick_random(MESSAGES[last_result]));
-            }
+function get_skew(cnt, h){
+    var rc = cnt[[h, 'r']] || 0;
+    var pc = cnt[[h, 'p']] || 0;
+    var sc = cnt[[h, 's']] || 0;
+    var sm = rc + pc + sc;
 
-            human_history += MOVE_LETTER[human_move];
-            computer_history += MOVE_LETTER[next_move];
-            get_next_move();
-            start_countdown();
+    var rscore = sc - pc;
+    var pscore = rc - sc;
+    var sscore = pc - rc;
+
+    if(rscore > pscore && rscore > sscore){
+        return [0, rscore / sm];
+    }
+    if(pscore > rscore && pscore > sscore){
+        return [1, pscore / sm];
+    }
+    if(sscore > rscore && sscore > pscore){
+        return [2, sscore / sm];
+    }
+    return [Math.floor(Math.random() * 3), 0];
+}
+
+function get_move(hs, cnt){
+    go = true;
+    if(cnt[1][hs[hs.length - 1]] < 3){
+        go = false;
+    }
+    move = get_skew(cnt[0], hs[hs.length - 1]);
+    if(move[1] < 0.35){
+        go = false;
+    }
+    return [go, move[0]];
+}
+
+
+function decide(){
+    hs = human_history.toLowerCase();
+    cnt = switch_count(hs);
+    go = get_move(hs, cnt);
+
+    if(go[0] || next_move == -1){
+        console.log('Overriding ' + next_move + ' to ' + go[1]);
+        next_move = go[1];
+    }
+
+    nrgames++;
+    hide_signs();
+    frozen_human = human_move;
+    frozen_computer = next_move;
+    if(next_move==0){
+        if(human_move==0) draw();
+        if(human_move==1) hwin();
+        if(human_move==2) hlose();
+    } else if(next_move==1){
+        if(human_move==1) draw();
+        if(human_move==2) hwin();
+        if(human_move==0) hlose();
+    } else {
+        if(human_move==2) draw();
+        if(human_move==0) hwin();
+        if(human_move==1) hlose();
+    }
+    show_score();
+    if(human_wins==20){
+        message('Du vann! Människor har bara tur.. -> Ladda om sidan för att spela igen');
+    } else if(computer_wins==20) {
+        message('Bwahaha, jag vann igen! Förutsägbara människor.. -> Ladda om sidan för att spela igen');
+    } else {
+        if(nrgames < 10) {
+            message('Först till 20 vinner! Det tar en stund att förstå din stil..');
+        } else {
+            message(pick_random(MESSAGES[last_result]));
         }
+
+        human_history += MOVE_LETTER[human_move];
+        computer_history += MOVE_LETTER[next_move];
+        get_next_move();
+        start_countdown();
     }
 }
 
